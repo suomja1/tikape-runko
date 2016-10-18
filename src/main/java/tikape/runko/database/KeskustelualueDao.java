@@ -17,7 +17,8 @@ public class KeskustelualueDao {
     //Metodit
     
     public Keskustelualue findOne(Integer key) throws SQLException {
-        return (Keskustelualue) database.queryAndCollect("SELECT * FROM Keskustelualue WHERE id = ?", rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), key).get(0);
+        String query = "SELECT * FROM Keskustelualue WHERE id = ?";
+        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), key).get(0);
     }
 
     public void delete(Integer key) throws SQLException {
@@ -34,11 +35,19 @@ public class KeskustelualueDao {
     }
     
     public Keskustelualue findByName(String name) throws SQLException {
-        return (Keskustelualue) database.queryAndCollect("SELECT * FROM Keskustelualue WHERE aihealue = ?", rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), name).get(0);
+        String query = "SELECT * FROM Keskustelualue WHERE aihealue = ?";
+        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), name).get(0);
     }
     
     public List<Avausnakyma> findAll() throws SQLException {
-        String query = "SELECT Keskustelualue.id AS Id, Keskustelualue.aihealue AS Alue, COUNT(DISTINCT Keskustelunavaus.id) + COUNT(DISTINCT Vastaus.id) AS Viesteja_yhteensa, MAX(IFNULL(MAX(DATETIME(Vastaus.ajankohta, 'localtime')), 0), MAX(DATETIME(Keskustelunavaus.aloitettu, 'localtime'))) AS Viimeisin_viesti FROM Keskustelualue LEFT JOIN Keskustelunavaus ON Keskustelualue.id = Keskustelunavaus.alue LEFT JOIN Vastaus ON Keskustelunavaus.id = Vastaus.avaus GROUP BY Keskustelualue.id ORDER BY Keskustelualue.aihealue";
+        String query = "SELECT Keskustelualue.id AS Id, Keskustelualue.aihealue AS Alue, "
+                + "COUNT(DISTINCT Keskustelunavaus.id) + COUNT(DISTINCT Vastaus.id) AS Viesteja_yhteensa, "
+                + "MAX(IFNULL(MAX(DATETIME(Vastaus.ajankohta, 'localtime')), 0), MAX(DATETIME(Keskustelunavaus.aloitettu, 'localtime'))) AS Viimeisin_viesti "
+                + "FROM Keskustelualue "
+                + "LEFT JOIN Keskustelunavaus ON Keskustelualue.id = Keskustelunavaus.alue "
+                + "LEFT JOIN Vastaus ON Keskustelunavaus.id = Vastaus.avaus "
+                + "GROUP BY Keskustelualue.id "
+                + "ORDER BY Keskustelualue.aihealue";
         
         return database.queryAndCollect(query, rs -> new Avausnakyma(Integer.parseInt(rs.getString("Id")), rs.getString("Alue"), Integer.parseInt(rs.getString("Viesteja_yhteensa")), rs.getString("Viimeisin_viesti")));
     }

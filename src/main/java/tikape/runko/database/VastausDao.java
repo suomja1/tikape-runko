@@ -17,8 +17,9 @@ public class VastausDao {
     
     public Vastaus findOne(Integer key) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        String query = "SELECT * FROM Vastaus WHERE id = ?";
 
-        return (Vastaus) database.queryAndCollect("SELECT * FROM Vastaus WHERE id = ?", rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key).get(0);
+        return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key).get(0);
     }
 
     public void delete(Integer key) throws SQLException {
@@ -30,19 +31,18 @@ public class VastausDao {
         return findByParameters(t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja()); // saadaan oikeat arvot sarakkeisiin 'id' ja 'ajankohta' -- toivottavasti...
     }
     
-    public void update(Integer key, Vastaus t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //Mitä tämä voisi tehdä, kun vastauksilla ei ole otsikkoa?
-    }
-    
     public Vastaus findByParameters(Integer avaus, String teksti, String kirjoittaja) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        String query = "SELECT * FROM Vastaus WHERE avaus = ? AND teksti = ? AND kirjoittaja = ?";
         
-        return (Vastaus) database.queryAndCollect("SELECT * FROM Vastaus WHERE avaus = ? AND teksti = ? AND kirjoittaja = ?", rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), avaus, teksti, kirjoittaja).get(0);
+        return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), avaus, teksti, kirjoittaja).get(0);
     }
 
     public List<Vastaus> findAll(Integer key) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
-        String query = "SELECT * FROM Vastaus INNER JOIN Keskustelunavaus ON Vastaus.avaus = Keskustelunavaus.id AND Keskustelunavaus.id = ?";
+        String query = "SELECT * FROM Vastaus "
+                + "INNER JOIN Keskustelunavaus ON Vastaus.avaus = Keskustelunavaus.id "
+                + "AND Keskustelunavaus.id = ?";
 
         return database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key);
     }

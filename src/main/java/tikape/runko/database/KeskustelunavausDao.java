@@ -18,8 +18,9 @@ public class KeskustelunavausDao {
 
     public Keskustelunavaus findOne(Integer key) throws SQLException {
         KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
+        String query = "SELECT * FROM Keskustelunavaus WHERE id = ?";
         
-        return (Keskustelunavaus) database.queryAndCollect("SELECT * FROM Keskustelunavaus WHERE id = ?", rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), key).get(0);
+        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), key).get(0);
     }
     
     public void delete(Integer key) throws SQLException {
@@ -37,12 +38,22 @@ public class KeskustelunavausDao {
     
     public Keskustelunavaus findByParameters(Integer alue, String otsikko, String avaus, String aloittaja) throws SQLException {
         KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
+        String query = "SELECT * FROM Keskustelunavaus WHERE alue = ? AND otsikko = ? AND avaus = ? AND aloittaja = ?";
         
-        return (Keskustelunavaus) database.queryAndCollect("SELECT * FROM Keskustelunavaus WHERE alue = ? AND otsikko = ? AND avaus = ? AND aloittaja = ?", rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), alue, otsikko, avaus, aloittaja).get(0);
+        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), alue, otsikko, avaus, aloittaja).get(0);
     }
     
     public List<Avausnakyma> findAll(int key) throws SQLException {
-        String query = "SELECT Keskustelunavaus.id AS Id, Keskustelunavaus.otsikko AS Alue, COUNT(DISTINCT Vastaus.id) + 1 AS Viesteja_yhteensa, MAX(IFNULL(MAX(DATETIME(Vastaus.ajankohta, 'localtime')), 0), MAX(DATETIME(Keskustelunavaus.aloitettu, 'localtime'))) AS Viimeisin_viesti FROM Keskustelunavaus INNER JOIN Keskustelualue ON Keskustelunavaus.alue = Keskustelualue.id AND Keskustelualue.id = ? LEFT JOIN Vastaus ON Keskustelunavaus.id = Vastaus.avaus GROUP BY Keskustelunavaus.id ORDER BY Viimeisin_viesti DESC LIMIT 10";
+        String query = "SELECT Keskustelunavaus.id AS Id, Keskustelunavaus.otsikko AS Alue, "
+                + "COUNT(DISTINCT Vastaus.id) + 1 AS Viesteja_yhteensa, "
+                + "MAX(IFNULL(MAX(DATETIME(Vastaus.ajankohta, 'localtime')), 0), MAX(DATETIME(Keskustelunavaus.aloitettu, 'localtime'))) AS Viimeisin_viesti "
+                + "FROM Keskustelunavaus "
+                + "INNER JOIN Keskustelualue ON Keskustelunavaus.alue = Keskustelualue.id "
+                + "AND Keskustelualue.id = ? "
+                + "LEFT JOIN Vastaus ON Keskustelunavaus.id = Vastaus.avaus "
+                + "GROUP BY Keskustelunavaus.id "
+                + "ORDER BY Viimeisin_viesti DESC "
+                + "LIMIT 10";
         
         return database.queryAndCollect(query, rs -> new Avausnakyma(Integer.parseInt(rs.getString("Id")), rs.getString("Alue"), Integer.parseInt(rs.getString("Viesteja_yhteensa")), rs.getString("Viimeisin_viesti")), key);
     }
