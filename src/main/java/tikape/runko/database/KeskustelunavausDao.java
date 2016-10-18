@@ -1,15 +1,11 @@
 package tikape.runko.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import tikape.runko.domain.Avausnakyma;
 import tikape.runko.domain.Keskustelunavaus;
 
-public class KeskustelunavausDao implements Dao<Keskustelunavaus, Integer> {
+public class KeskustelunavausDao {
     private Database database;
 
     //Konstruktori
@@ -20,32 +16,27 @@ public class KeskustelunavausDao implements Dao<Keskustelunavaus, Integer> {
     
     //Dao-metodit
 
-    @Override
     public Keskustelunavaus findOne(Integer key) throws SQLException {
         KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
         
         return (Keskustelunavaus) database.queryAndCollect("SELECT * FROM Keskustelunavaus WHERE id = ?", rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), key).get(0);
     }
     
-    @Override
     public List<Keskustelunavaus> findAll() throws SQLException {
         KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
         
         return database.queryAndCollect("SELECT * FROM Keskustelunavaus", rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")));
     }
     
-    @Override
     public void delete(Integer key) throws SQLException {
         database.update("DELETE FROM Keskustelunavaus WHERE id = ?", key);
     }
 
-    @Override
     public Keskustelunavaus create(Keskustelunavaus t) throws SQLException {
         database.update("INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)", t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
         return findByParameters(t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja()); // saadaan oikeat arvot sarakkeisiin 'id' ja 'aloitettu' -- toivottavasti...
     }
     
-    @Override
     public void update(Integer key, Keskustelunavaus t) throws SQLException {
         database.update("UPDATE Keskustelunavaus SET otsikko = ? WHERE id = ?", t.getOtsikko(), key);
     }
