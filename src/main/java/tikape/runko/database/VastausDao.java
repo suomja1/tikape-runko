@@ -13,7 +13,7 @@ public class VastausDao {
         this.database = database;
     }
 
-    //Dao-metodit
+    //Metodit
     
     public Vastaus findOne(Integer key) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
@@ -21,12 +21,6 @@ public class VastausDao {
         return (Vastaus) database.queryAndCollect("SELECT * FROM Vastaus WHERE id = ?", rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key).get(0);
     }
 
-    public List<Vastaus> findAll() throws SQLException {
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
-
-        return database.queryAndCollect("SELECT * FROM Vastaus", rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")));
-    }
-    
     public void delete(Integer key) throws SQLException {
         database.update("DELETE FROM Vastaus WHERE id = ?", key);
     }
@@ -40,15 +34,13 @@ public class VastausDao {
         throw new UnsupportedOperationException("Not supported yet."); //Mitä tämä voisi tehdä, kun vastauksilla ei ole otsikkoa?
     }
     
-    //Muut metodit
-    
     public Vastaus findByParameters(Integer avaus, String teksti, String kirjoittaja) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
         
         return (Vastaus) database.queryAndCollect("SELECT * FROM Vastaus WHERE avaus = ? AND teksti = ? AND kirjoittaja = ?", rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), avaus, teksti, kirjoittaja).get(0);
     }
 
-    public List<Vastaus> findAllInAvaus(Integer key) throws SQLException {
+    public List<Vastaus> findAll(Integer key) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
         String query = "SELECT * FROM Vastaus INNER JOIN Keskustelunavaus ON Vastaus.avaus = Keskustelunavaus.id AND Keskustelunavaus.id = ?";
 
