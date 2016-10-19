@@ -19,7 +19,14 @@ public class KeskustelunavausDao {
         KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
         String query = "SELECT * FROM Keskustelunavaus WHERE id = ?";
         
-        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), key).get(0);
+        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(
+                rs.getInt("id"), 
+                keskustelualuedao.findOne(rs.getInt("alue")), 
+                rs.getString("otsikko"), 
+                rs.getString("avaus"), 
+                rs.getString("aloitettu"), 
+                rs.getString("aloittaja")
+        ), key).get(0);
     }
     
     public void delete(Integer key) throws SQLException {
@@ -27,19 +34,14 @@ public class KeskustelunavausDao {
     }
 
     public Keskustelunavaus create(Keskustelunavaus t) throws SQLException {
-        int id = database.update("INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)", t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
+        String query = "INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)";
+        int id = database.update(query, t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
         return this.findOne(id);
     }
     
     public void update(Integer key, Keskustelunavaus t) throws SQLException {
-        database.update("UPDATE Keskustelunavaus SET otsikko = ? WHERE id = ?", t.getOtsikko(), key);
-    }
-    
-    public Keskustelunavaus findByParameters(Integer alue, String otsikko, String avaus, String aloittaja) throws SQLException {
-        KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
-        String query = "SELECT * FROM Keskustelunavaus WHERE alue = ? AND otsikko = ? AND avaus = ? AND aloittaja = ?";
-        
-        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(rs.getInt("id"), keskustelualuedao.findOne(rs.getInt("alue")), rs.getString("otsikko"), rs.getString("avaus"), rs.getString("aloitettu"), rs.getString("aloittaja")), alue, otsikko, avaus, aloittaja).get(0);
+        String query = "UPDATE Keskustelunavaus SET otsikko = ? WHERE id = ?";
+        database.update(query, t.getOtsikko(), key);
     }
     
     public List<Avausnakyma> findAll(int key) throws SQLException {

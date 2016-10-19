@@ -26,7 +26,10 @@ public class Main {
 
         //Keskustelualueen lisääminen
         post("/", (req, res) -> {
-            keskustelualuedao.create(new Keskustelualue(req.queryParams("aihealue"), req.queryParams("perustaja")));
+            keskustelualuedao.create(new Keskustelualue(
+                    req.queryParams("aihealue"), 
+                    req.queryParams("perustaja")
+            ));
             
             res.redirect("/");
             return "";
@@ -45,7 +48,12 @@ public class Main {
         //Keskustelualueen lisääminen
         post("/:id", (req, res) -> {
             Integer id = Integer.parseInt(req.params(":id"));
-            keskustelunavausdao.create(new Keskustelunavaus(keskustelualuedao.findOne(id), req.queryParams("otsikko"), req.queryParams("avaus"), req.queryParams("aloittaja")));
+            keskustelunavausdao.create(new Keskustelunavaus(
+                    keskustelualuedao.findOne(id), 
+                    req.queryParams("otsikko"), 
+                    req.queryParams("avaus"), 
+                    req.queryParams("aloittaja")
+            ));
             
             res.redirect("/" + id);
             return "";
@@ -67,7 +75,11 @@ public class Main {
         post("/:id/:idd", (req, res) -> {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
-            vastausdao.create(new Vastaus(keskustelunavausdao.findOne(idd), req.queryParams("teksti"), req.queryParams("kirjoittaja")));
+            vastausdao.create(new Vastaus(
+                    keskustelunavausdao.findOne(idd), 
+                    req.queryParams("teksti"), 
+                    req.queryParams("kirjoittaja")
+            ));
             
             res.redirect("/" + id + "/" + idd);
             return "";

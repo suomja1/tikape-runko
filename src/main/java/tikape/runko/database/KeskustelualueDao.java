@@ -17,7 +17,13 @@ public class KeskustelualueDao {
     
     public Keskustelualue findOne(Integer key) throws SQLException {
         String query = "SELECT * FROM Keskustelualue WHERE id = ?";
-        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), key).get(0);
+        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(
+                rs.getInt("id"), 
+                rs.getString("aihealue"), 
+                rs.getString("kuvaus"), 
+                rs.getString("perustettu"), 
+                rs.getString("perustaja")
+        ), key).get(0);
     }
 
     public void delete(Integer key) throws SQLException {
@@ -25,17 +31,14 @@ public class KeskustelualueDao {
     }
 
     public Keskustelualue create(Keskustelualue t) throws SQLException {
-        int id = database.update("INSERT INTO Keskustelualue (aihealue, kuvaus, perustaja) VALUES (?, ?, ?)", t.getAihealue(), t.getKuvaus(), t.getPerustaja());
+        String query = "INSERT INTO Keskustelualue (aihealue, kuvaus, perustaja) VALUES (?, ?, ?)";
+        int id = database.update(query, t.getAihealue(), t.getKuvaus(), t.getPerustaja());
         return this.findOne(id);
     }
 
     public void update(Integer key, Keskustelualue t) throws SQLException {
-        database.update("UPDATE Keskustelualue SET aihealue = ? WHERE id = ?", t.getAihealue(), key);
-    }
-    
-    public Keskustelualue findByName(String name) throws SQLException {
-        String query = "SELECT * FROM Keskustelualue WHERE aihealue = ?";
-        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(rs.getInt("id"), rs.getString("aihealue"), rs.getString("kuvaus"), rs.getString("perustettu"), rs.getString("perustaja")), name).get(0);
+        String query = "UPDATE Keskustelualue SET aihealue = ? WHERE id = ?";
+        database.update(query, t.getAihealue(), key);
     }
     
     public List<Avausnakyma> findAll() throws SQLException {
@@ -48,6 +51,11 @@ public class KeskustelualueDao {
                 + "GROUP BY Keskustelualue.id "
                 + "ORDER BY Keskustelualue.aihealue";
         
-        return database.queryAndCollect(query, rs -> new Avausnakyma(Integer.parseInt(rs.getString("Id")), rs.getString("Alue"), Integer.parseInt(rs.getString("Viesteja_yhteensa")), rs.getString("Viimeisin_viesti")));
+        return database.queryAndCollect(query, rs -> new Avausnakyma(
+                Integer.parseInt(rs.getString("Id")), 
+                rs.getString("Alue"), 
+                Integer.parseInt(rs.getString("Viesteja_yhteensa")), 
+                rs.getString("Viimeisin_viesti")
+        ));
     }
 }

@@ -19,7 +19,13 @@ public class VastausDao {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
         String query = "SELECT * FROM Vastaus WHERE id = ?";
 
-        return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key).get(0);
+        return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(
+                rs.getInt("id"), 
+                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                rs.getString("teksti"), 
+                rs.getString("ajankohta"), 
+                rs.getString("kirjoittaja")
+        ), key).get(0);
     }
 
     public void delete(Integer key) throws SQLException {
@@ -27,23 +33,23 @@ public class VastausDao {
     }
 
     public Vastaus create(Vastaus t) throws SQLException {
-        int id = database.update("INSERT INTO Vastaus (avaus, teksti, kirjoittaja) VALUES (?, ?, ?)", t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja());
+        String query = "INSERT INTO Vastaus (avaus, teksti, kirjoittaja) VALUES (?, ?, ?)";
+        int id = database.update(query, t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja());
         return this.findOne(id);
     }
     
-    public Vastaus findByParameters(Integer avaus, String teksti, String kirjoittaja) throws SQLException {
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
-        String query = "SELECT * FROM Vastaus WHERE avaus = ? AND teksti = ? AND kirjoittaja = ?";
-        
-        return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), avaus, teksti, kirjoittaja).get(0);
-    }
-
     public List<Vastaus> findAll(Integer key) throws SQLException {
         KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
         String query = "SELECT * FROM Vastaus "
                 + "INNER JOIN Keskustelunavaus ON Vastaus.avaus = Keskustelunavaus.id "
                 + "AND Keskustelunavaus.id = ?";
 
-        return database.queryAndCollect(query, rs -> new Vastaus(rs.getInt("id"), keskustelunavausdao.findOne(rs.getInt("avaus")), rs.getString("teksti"), rs.getString("ajankohta"), rs.getString("kirjoittaja")), key);
+        return database.queryAndCollect(query, rs -> new Vastaus(
+                rs.getInt("id"), 
+                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                rs.getString("teksti"), 
+                rs.getString("ajankohta"), 
+                rs.getString("kirjoittaja")
+        ), key);
     }
 }
