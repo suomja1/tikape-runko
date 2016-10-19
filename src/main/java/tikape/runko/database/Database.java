@@ -1,12 +1,7 @@
 package tikape.runko.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 public class Database<T> {
     private String address;
@@ -21,7 +16,7 @@ public class Database<T> {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         Connection conn = getConnection();
-        PreparedStatement stmt = conn.prepareStatement(updateQuery);
+        PreparedStatement stmt = conn.prepareStatement(updateQuery, Statement.RETURN_GENERATED_KEYS);
 
         for (int i = 0; i < params.length; i++) {
             stmt.setObject(i + 1, params[i]);
@@ -29,10 +24,21 @@ public class Database<T> {
 
         int changes = stmt.executeUpdate();
 
-        stmt.close();
-        conn.close();
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
 
-        return changes;
+                stmt.close();
+                conn.close();
+
+                return id;
+            } else {
+                stmt.close();
+                conn.close();
+                
+                return changes;
+            }
+        }
     }
 
     public List<T> queryAndCollect(String query, Collector<T> col, Object... params) throws SQLException {

@@ -2,7 +2,7 @@ package tikape.runko.database;
 
 import java.sql.*;
 import java.util.List;
-import tikape.runko.domain.Vastaus;
+import tikape.runko.domain.*;
 
 public class VastausDao {
     private Database database;
@@ -27,8 +27,8 @@ public class VastausDao {
     }
 
     public Vastaus create(Vastaus t) throws SQLException {
-        database.update("INSERT INTO Vastaus (avaus, teksti, kirjoittaja) VALUES (?, ?, ?)", t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja());
-        return findByParameters(t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja()); // saadaan oikeat arvot sarakkeisiin 'id' ja 'ajankohta' -- toivottavasti...
+        int id = database.update("INSERT INTO Vastaus (avaus, teksti, kirjoittaja) VALUES (?, ?, ?)", t.getAvaus().getId(), t.getTeksti(), t.getKirjoittaja());
+        return this.findOne(id);
     }
     
     public Vastaus findByParameters(Integer avaus, String teksti, String kirjoittaja) throws SQLException {

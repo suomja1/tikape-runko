@@ -2,8 +2,7 @@ package tikape.runko.database;
 
 import java.sql.SQLException;
 import java.util.List;
-import tikape.runko.domain.Avausnakyma;
-import tikape.runko.domain.Keskustelualue;
+import tikape.runko.domain.*;
 
 public class KeskustelualueDao {
     private Database database;
@@ -26,8 +25,8 @@ public class KeskustelualueDao {
     }
 
     public Keskustelualue create(Keskustelualue t) throws SQLException {
-        database.update("INSERT INTO Keskustelualue (aihealue, kuvaus, perustaja) VALUES (?, ?, ?)", t.getAihealue(), t.getKuvaus(), t.getPerustaja());
-        return findByName(t.getAihealue()); //aihealue sarake oli määritelty UNIQUE-parametrilla!
+        int id = database.update("INSERT INTO Keskustelualue (aihealue, kuvaus, perustaja) VALUES (?, ?, ?)", t.getAihealue(), t.getKuvaus(), t.getPerustaja());
+        return this.findOne(id);
     }
 
     public void update(Integer key, Keskustelualue t) throws SQLException {

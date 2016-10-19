@@ -2,8 +2,7 @@ package tikape.runko.database;
 
 import java.sql.SQLException;
 import java.util.List;
-import tikape.runko.domain.Avausnakyma;
-import tikape.runko.domain.Keskustelunavaus;
+import tikape.runko.domain.*;
 
 public class KeskustelunavausDao {
     private Database database;
@@ -28,8 +27,8 @@ public class KeskustelunavausDao {
     }
 
     public Keskustelunavaus create(Keskustelunavaus t) throws SQLException {
-        database.update("INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)", t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
-        return findByParameters(t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja()); // saadaan oikeat arvot sarakkeisiin 'id' ja 'aloitettu' -- toivottavasti...
+        int id = database.update("INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)", t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
+        return this.findOne(id);
     }
     
     public void update(Integer key, Keskustelunavaus t) throws SQLException {
