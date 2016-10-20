@@ -54,7 +54,7 @@ public class KeskustelunavausDao {
                 + "LEFT JOIN Vastaus ON Keskustelunavaus.id = Vastaus.avaus "
                 + "GROUP BY Keskustelunavaus.id "
                 + "ORDER BY Viimeisin_viesti DESC "
-                + "LIMIT 10";
+                + "LIMIT 10"; // kymmenen uusinta
         
         return database.queryAndCollect(query, rs -> new Avausnakyma(Integer.parseInt(rs.getString("Id")), rs.getString("Alue"), Integer.parseInt(rs.getString("Viesteja_yhteensa")), rs.getString("Viimeisin_viesti")), key);
     }
