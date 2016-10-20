@@ -88,6 +88,15 @@ public class Main {
             Integer idd = Integer.parseInt(req.params(":idd"));
             int sivu = Integer.parseInt(req.params(":sivu"));
             int maara = 10; // kerrallaan näytettävien vastausten määrä
+            int max = vastausdao.noOfRows(idd) / maara + 1;
+            
+            if (sivu > max) {
+                res.redirect("/" + id + "/" + idd + "/sivu/" + max);
+                return null;
+            } else if (sivu < 1) {
+                res.redirect("/" + id + "/" + idd + "/sivu/" + 1);
+                return null;
+            }
             
             if (sivu == 1) {
                 maara--;
@@ -101,7 +110,7 @@ public class Main {
             map.put("avaus", keskustelunavausdao.findOne(idd));
             map.put("viestit", viestit);
             map.put("sivu", sivu);
-            map.put("max", vastausdao.noOfRows(idd) / maara + 1);
+            map.put("max", max);
             map.put("alku", alku + 2);
             return new ModelAndView(map, "avaus");
         }, new ThymeleafTemplateEngine());
@@ -118,7 +127,7 @@ public class Main {
                     req.queryParams("kirjoittaja")
             ));
 
-            res.redirect("/" + id + "/" + idd + "/sivu/" + (vastausdao.noOfRows(idd) / maara + 1));
+            res.redirect("/" + id + "/" + idd + "/sivu/" + Integer.MAX_VALUE);
             return "";
         });
     }
