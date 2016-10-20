@@ -7,6 +7,7 @@ public class Keskustelunavaus {
     private String avaus;
     private String aloitettu;
     private String aloittaja;
+//    private List<Vastaus> vastaukset // puitäisikö tässä olla lista avauksen vastauksista?
     
     //Konstruktorit
     
