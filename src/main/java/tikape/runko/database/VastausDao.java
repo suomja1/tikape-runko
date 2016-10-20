@@ -52,4 +52,25 @@ public class VastausDao {
                 rs.getString("kirjoittaja")
         ), key);
     }
+
+    public List<Vastaus> findAll(int avaus, int alku, int maara) throws SQLException {
+        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        String query = "SELECT * FROM Vastaus "
+                + "WHERE avaus = ? "
+                + "ORDER BY ajankohta "
+                + "LIMIT ?, ?";
+        
+        return database.queryAndCollect(query, rs -> new Vastaus(
+                rs.getInt("id"), 
+                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                rs.getString("teksti"), 
+                rs.getString("ajankohta"), 
+                rs.getString("kirjoittaja")
+        ), avaus, alku, maara);
+    }
+
+    public int noOfRows(Integer idd) throws SQLException {
+        String query = "SELECT COUNT(*) AS rivit FROM Vastaus WHERE avaus = ?";
+        return (int) database.queryAndCollect(query, rs -> rs.getInt("rivit"), idd).get(0);
+    }
 }

@@ -16,8 +16,8 @@
 
             <tr>
                 <td>
-                    <ol>
-                        <li><span th:text="${avaus.avaus}">Avausviesti</span><span>&nbsp;&nbsp;</span>/<span th:text="${avaus.aloittaja}">Aloittaja</span></li>
+                    <ol th:attr="start=${alku}">
+                        <li th:if="${sivu==1}"><span th:text="${avaus.avaus}">Avausviesti</span><span>&nbsp;&nbsp;</span>/<span th:text="${avaus.aloittaja}">Aloittaja</span></li>
                         <th:block th:each="viesti : ${viestit}">
                             <li><span th:text="${viesti.teksti}">Vastaus</span><span>&nbsp;&nbsp;</span>/<span th:text="${viesti.kirjoittaja}">Kirjoittaja</span></li>
                         </th:block>
@@ -27,8 +27,8 @@
         </table>
 
         <h4>Lisää viesti</h4>
-        
-        <form method="POST" th:action="@{~/{id}/{idd}(id=${alue.id},idd=${avaus.id})}" class="form-horizontal">
+
+        <form method="POST" th:action="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu})}" class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-2 control-label">Teksti</label>
                 <div class="col-sm-10">

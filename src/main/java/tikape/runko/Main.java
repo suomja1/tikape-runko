@@ -74,28 +74,49 @@ public class Main {
         });
 
         //Keskustelunavauskohtaiset sivut
+        
         get("/:id/:idd", (req, res) -> {
+            Integer id = Integer.parseInt(req.params(":id"));
+            Integer idd = Integer.parseInt(req.params(":idd"));
+            res.redirect("/" + id + "/" + idd + "/sivu/1");
+            return "";
+        });
+        
+        get("/:id/:idd/sivu/:sivu", (req, res) -> {
             HashMap map = new HashMap<>();
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
+            int sivu = Integer.parseInt(req.params(":sivu"));
+            int maara = 10; // kerrallaan näytettävien vastausten määrä
+            
+            if (sivu == 1) {
+                maara--;
+            }
+            
+            int alku = (sivu - 1) * maara;
+            List<Vastaus> viestit = vastausdao.findAll(idd, alku, maara);
 
             map.put("alue", keskustelualuedao.findOne(id));
             map.put("avaus", keskustelunavausdao.findOne(idd));
-            map.put("viestit", vastausdao.findAll(idd));
+            map.put("viestit", viestit);
+            map.put("sivu", sivu);
+            map.put("max", vastausdao.noOfRows(idd) / maara + 1);
+            map.put("alku", alku + 1);
             return new ModelAndView(map, "avaus");
         }, new ThymeleafTemplateEngine());
 
         //Vastauksen lisääminen
-        post("/:id/:idd", (req, res) -> {
+        post("/:id/:idd/sivu/:sivu", (req, res) -> {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
+            int sivu = Integer.parseInt(req.params(":sivu"));
             vastausdao.create(new Vastaus(
                     keskustelunavausdao.findOne(idd),
                     req.queryParams("teksti"),
                     req.queryParams("kirjoittaja")
             ));
 
-            res.redirect("/" + id + "/" + idd);
+            res.redirect("/" + id + "/" + idd + "/sivu/" + sivu);
             return "";
         });
     }
