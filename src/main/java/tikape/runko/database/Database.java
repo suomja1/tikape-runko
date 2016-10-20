@@ -16,7 +16,7 @@ public class Database<T> {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         Connection conn = getConnection();
-        PreparedStatement stmt = conn.prepareStatement(updateQuery, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement stmt = conn.prepareStatement(updateQuery, Statement.RETURN_GENERATED_KEYS); //tämän pitäisi osata palauttaa automaattisesti luotu id
 
         for (int i = 0; i < params.length; i++) {
             stmt.setObject(i + 1, params[i]);
