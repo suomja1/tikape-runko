@@ -26,6 +26,8 @@
             </tr>
         </table>
 
+        <p><a th:if="${sivu>1}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}-1)}">Edellinen</a> | <a th:unless="${sivu>=max}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}+1)}">Seuraava</a></p>
+        
         <h4>Lisää viesti</h4>
 
         <form method="POST" th:action="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu})}" class="form-horizontal">
