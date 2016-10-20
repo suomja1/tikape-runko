@@ -87,9 +87,13 @@ public class Main {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
             int sivu = Integer.parseInt(req.params(":sivu"));
-            int maara = 5; // kerrallaan näytettävien vastausten määrä
+            int maara = 10; // kerrallaan näytettävien vastausten määrä
             
-            int alku = (sivu - 1) * maara;
+            if (sivu == 1) {
+                maara--;
+            }
+            
+            int alku = (sivu - 1) * maara - 1;
             
             List<Vastaus> viestit = vastausdao.findAll(idd, alku, maara);
 
@@ -98,7 +102,7 @@ public class Main {
             map.put("viestit", viestit);
             map.put("sivu", sivu);
             map.put("max", vastausdao.noOfRows(idd) / maara + 1);
-            map.put("alku", alku + 1);
+            map.put("alku", alku + 2);
             return new ModelAndView(map, "avaus");
         }, new ThymeleafTemplateEngine());
 
