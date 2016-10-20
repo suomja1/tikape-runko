@@ -111,13 +111,14 @@ public class Main {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
             int sivu = Integer.parseInt(req.params(":sivu"));
+            int maara = 10; // kerrallaan näytettävien vastausten määrä
             vastausdao.create(new Vastaus(
                     keskustelunavausdao.findOne(idd),
                     req.queryParams("teksti"),
                     req.queryParams("kirjoittaja")
             ));
 
-            res.redirect("/" + id + "/" + idd + "/sivu/" + sivu);
+            res.redirect("/" + id + "/" + idd + "/sivu/" + (vastausdao.noOfRows(idd) / maara + 1));
             return "";
         });
     }

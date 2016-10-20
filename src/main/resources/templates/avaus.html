@@ -24,9 +24,13 @@
                     </ol>
                 </td>
             </tr>
+            
+            <tr th:if="${max>1}">
+                <td>
+                    <a th:if="${sivu>1}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}-1)}">Edellinen</a> | <a th:unless="${sivu>=max}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}+1)}">Seuraava</a>
+                </td>
+            </tr>
         </table>
-
-        <p><a th:if="${sivu>1}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}-1)}">Edellinen</a> | <a th:unless="${sivu>=max}" th:href="@{~/{id}/{idd}/sivu/{sivu}(id=${alue.id},idd=${avaus.id},sivu=${sivu}+1)}">Seuraava</a></p>
         
         <h4>Lisää viesti</h4>
 
