@@ -16,12 +16,12 @@ public class VastausDao {
     //Metodit
     
     public Vastaus findOne(Integer key) throws SQLException {
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        AvausDao avausDao = new AvausDao(database);
         String query = "SELECT * FROM Vastaus WHERE id = ?";
 
         return (Vastaus) database.queryAndCollect(query, rs -> new Vastaus(
                 rs.getInt("id"), 
-                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                avausDao.findOne(rs.getInt("avaus")), 
                 rs.getString("teksti"), 
                 rs.getString("ajankohta"), 
                 rs.getString("kirjoittaja")
@@ -39,14 +39,14 @@ public class VastausDao {
     }
     
     public List<Vastaus> findAll(Integer key) throws SQLException {
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        AvausDao avausDao = new AvausDao(database);
         String query = "SELECT * FROM Vastaus "
                 + "INNER JOIN Keskustelunavaus ON Vastaus.avaus = Keskustelunavaus.id "
                 + "AND Keskustelunavaus.id = ?";
 
         return database.queryAndCollect(query, rs -> new Vastaus(
                 rs.getInt("id"), 
-                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                avausDao.findOne(rs.getInt("avaus")), 
                 rs.getString("teksti"), 
                 rs.getString("ajankohta"), 
                 rs.getString("kirjoittaja")
@@ -54,7 +54,7 @@ public class VastausDao {
     }
 
     public List<Vastaus> findAll(int avaus, int alku, int maara) throws SQLException {
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        AvausDao avausDao = new AvausDao(database);
         String query = "SELECT * FROM Vastaus "
                 + "WHERE avaus = ? "
                 + "ORDER BY ajankohta "
@@ -62,7 +62,7 @@ public class VastausDao {
         
         return database.queryAndCollect(query, rs -> new Vastaus(
                 rs.getInt("id"), 
-                keskustelunavausdao.findOne(rs.getInt("avaus")), 
+                avausDao.findOne(rs.getInt("avaus")), 
                 rs.getString("teksti"), 
                 rs.getString("ajankohta"), 
                 rs.getString("kirjoittaja")

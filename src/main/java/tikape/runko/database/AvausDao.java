@@ -4,24 +4,24 @@ import java.sql.SQLException;
 import java.util.List;
 import tikape.runko.domain.*;
 
-public class KeskustelunavausDao {
+public class AvausDao {
     private Database database;
 
     //Konstruktori
     
-    public KeskustelunavausDao(Database database) {
+    public AvausDao(Database database) {
         this.database = database;
     }
     
     //Metodit
 
-    public Keskustelunavaus findOne(Integer key) throws SQLException {
-        KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
+    public Avaus findOne(Integer key) throws SQLException {
+        AlueDao alueDao = new AlueDao(database);
         String query = "SELECT * FROM Keskustelunavaus WHERE id = ?";
         
-        return (Keskustelunavaus) database.queryAndCollect(query, rs -> new Keskustelunavaus(
+        return (Avaus) database.queryAndCollect(query, rs -> new Avaus(
                 rs.getInt("id"), 
-                keskustelualuedao.findOne(rs.getInt("alue")), 
+                alueDao.findOne(rs.getInt("alue")), 
                 rs.getString("otsikko"), 
                 rs.getString("avaus"), 
                 rs.getString("aloitettu"), 
@@ -33,13 +33,13 @@ public class KeskustelunavausDao {
         database.update("DELETE FROM Keskustelunavaus WHERE id = ?", key);
     }
 
-    public Keskustelunavaus create(Keskustelunavaus t) throws SQLException {
+    public Avaus create(Avaus t) throws SQLException {
         String query = "INSERT INTO Keskustelunavaus (alue, otsikko, avaus, aloittaja) VALUES (?, ?, ?, ?)";
         int id = database.update(query, t.getAlue().getId(), t.getOtsikko(), t.getAvaus(), t.getAloittaja());
         return this.findOne(id);
     }
     
-    public void update(Integer key, Keskustelunavaus t) throws SQLException {
+    public void update(Integer key, Avaus t) throws SQLException {
         String query = "UPDATE Keskustelunavaus SET otsikko = ? WHERE id = ?";
         database.update(query, t.getOtsikko(), key);
     }

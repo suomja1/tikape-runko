@@ -4,20 +4,20 @@ import java.sql.SQLException;
 import java.util.List;
 import tikape.runko.domain.*;
 
-public class KeskustelualueDao {
+public class AlueDao {
     private Database database;
     
     //Konstruktori
 
-    public KeskustelualueDao(Database database) {
+    public AlueDao(Database database) {
         this.database = database;
     }
     
     //Metodit
     
-    public Keskustelualue findOne(Integer key) throws SQLException {
+    public Alue findOne(Integer key) throws SQLException {
         String query = "SELECT * FROM Keskustelualue WHERE id = ?";
-        return (Keskustelualue) database.queryAndCollect(query, rs -> new Keskustelualue(
+        return (Alue) database.queryAndCollect(query, rs -> new Alue(
                 rs.getInt("id"), 
                 rs.getString("aihealue"), 
                 rs.getString("kuvaus"), 
@@ -30,13 +30,13 @@ public class KeskustelualueDao {
         database.update("DELETE FROM Keskustelualue WHERE id = ?", key);
     }
 
-    public Keskustelualue create(Keskustelualue t) throws SQLException {
+    public Alue create(Alue t) throws SQLException {
         String query = "INSERT INTO Keskustelualue (aihealue, kuvaus, perustaja) VALUES (?, ?, ?)";
         int id = database.update(query, t.getAihealue(), t.getKuvaus(), t.getPerustaja());
         return this.findOne(id);
     }
 
-    public void update(Integer key, Keskustelualue t) throws SQLException {
+    public void update(Integer key, Alue t) throws SQLException {
         String query = "UPDATE Keskustelualue SET aihealue = ? WHERE id = ?";
         database.update(query, t.getAihealue(), key);
     }

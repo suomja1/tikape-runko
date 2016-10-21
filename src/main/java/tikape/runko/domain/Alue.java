@@ -1,6 +1,6 @@
 package tikape.runko.domain;
 
-public class Keskustelualue {
+public class Alue {
     private Integer id;
     private String aihealue;
     private String kuvaus;
@@ -10,10 +10,10 @@ public class Keskustelualue {
 
     // Konstruktorit:
     
-    public Keskustelualue() {
+    public Alue() {
     }
 
-    public Keskustelualue(Integer id, String aihealue, String kuvaus, String perustettu, String perustaja) {
+    public Alue(Integer id, String aihealue, String kuvaus, String perustettu, String perustaja) {
         this.id = id;
         this.aihealue = aihealue;
         this.kuvaus = kuvaus;
@@ -21,7 +21,7 @@ public class Keskustelualue {
         this.perustaja = perustaja;
     }
 
-    public Keskustelualue(String aihealue, String perustaja) {
+    public Alue(String aihealue, String perustaja) {
         this(null, aihealue, null, null, perustaja);
     }
 

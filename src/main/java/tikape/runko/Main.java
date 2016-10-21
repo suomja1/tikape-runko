@@ -24,21 +24,21 @@ public class Main {
 
         Database database = new Database(jdbcOsoite);
 
-        KeskustelualueDao keskustelualuedao = new KeskustelualueDao(database);
-        KeskustelunavausDao keskustelunavausdao = new KeskustelunavausDao(database);
+        AlueDao alueDao = new AlueDao(database);
+        AvausDao avausDao = new AvausDao(database);
         VastausDao vastausdao = new VastausDao(database);
 
         //Pyyntö juuriosoitteeseen listaa kaikki keskustelualueet
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
 
-            map.put("alueet", keskustelualuedao.findAll());
+            map.put("alueet", alueDao.findAll());
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
 
         //Keskustelualueen lisääminen
         post("/", (req, res) -> {
-            keskustelualuedao.create(new Keskustelualue(
+            alueDao.create(new Alue(
                     req.queryParams("aihealue"),
                     req.queryParams("perustaja")
             ));
@@ -52,16 +52,16 @@ public class Main {
             HashMap map = new HashMap<>();
             Integer id = Integer.parseInt(req.params(":id"));
 
-            map.put("alue", keskustelualuedao.findOne(id));
-            map.put("avaukset", keskustelunavausdao.findAll(id));
+            map.put("alue", alueDao.findOne(id));
+            map.put("avaukset", avausDao.findAll(id));
             return new ModelAndView(map, "alue");
         }, new ThymeleafTemplateEngine());
 
         //Keskustelualueen lisääminen
         post("/:id", (req, res) -> {
             Integer id = Integer.parseInt(req.params(":id"));
-            keskustelunavausdao.create(new Keskustelunavaus(
-                    keskustelualuedao.findOne(id),
+            avausDao.create(new Avaus(
+                    alueDao.findOne(id),
                     req.queryParams("otsikko"),
                     req.queryParams("avaus"),
                     req.queryParams("aloittaja")
@@ -104,8 +104,8 @@ public class Main {
             
             List<Vastaus> viestit = vastausdao.findAll(idd, alku, maara);
 
-            map.put("alue", keskustelualuedao.findOne(id));
-            map.put("avaus", keskustelunavausdao.findOne(idd));
+            map.put("alue", alueDao.findOne(id));
+            map.put("avaus", avausDao.findOne(idd));
             map.put("viestit", viestit);
             map.put("sivu", sivu);
             map.put("max", max);
@@ -118,7 +118,7 @@ public class Main {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
             vastausdao.create(new Vastaus(
-                    keskustelunavausdao.findOne(idd),
+                    avausDao.findOne(idd),
                     req.queryParams("teksti"),
                     req.queryParams("kirjoittaja")
             ));

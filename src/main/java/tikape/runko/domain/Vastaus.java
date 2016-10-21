@@ -2,7 +2,7 @@ package tikape.runko.domain;
 
 public class Vastaus {
     private Integer id;
-    private Keskustelunavaus avaus;
+    private Avaus avaus;
     private String teksti;
     private String ajankohta;
     private String kirjoittaja;
@@ -12,7 +12,7 @@ public class Vastaus {
     public Vastaus() {
     }
     
-    public Vastaus (Integer id, Keskustelunavaus avaus, String teksti, String ajankohta, String kirjoittaja) {
+    public Vastaus (Integer id, Avaus avaus, String teksti, String ajankohta, String kirjoittaja) {
         this.id = id;
         this.avaus = avaus;
         this.teksti = teksti;
@@ -20,13 +20,13 @@ public class Vastaus {
         this.kirjoittaja = kirjoittaja;
     }
     
-    public Vastaus (Keskustelunavaus avaus, String teksti, String kirjoittaja) {
+    public Vastaus (Avaus avaus, String teksti, String kirjoittaja) {
         this(null, avaus, teksti, null, kirjoittaja);
     }
     
     //Getterit
     
-    public Keskustelunavaus getAvaus() {
+    public Avaus getAvaus() {
         return this.avaus;
     }
     
@@ -48,7 +48,7 @@ public class Vastaus {
     
     //Setterit
     
-    public void setAvaus(Keskustelunavaus avaus) {
+    public void setAvaus(Avaus avaus) {
         this.avaus = avaus;
     }
     

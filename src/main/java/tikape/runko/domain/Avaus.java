@@ -1,8 +1,8 @@
 package tikape.runko.domain;
 
-public class Keskustelunavaus {
+public class Avaus {
     private Integer id;
-    private Keskustelualue alue;
+    private Alue alue;
     private String otsikko;
     private String avaus;
     private String aloitettu;
@@ -11,10 +11,10 @@ public class Keskustelunavaus {
     
     //Konstruktorit
     
-    public Keskustelunavaus() {
+    public Avaus() {
     }
 
-    public Keskustelunavaus(Integer id, Keskustelualue alue, String otsikko, String avaus, String aloitettu, String aloittaja) {
+    public Avaus(Integer id, Alue alue, String otsikko, String avaus, String aloitettu, String aloittaja) {
         this.id = id;
         this.alue = alue;
         this.otsikko = otsikko;
@@ -23,7 +23,7 @@ public class Keskustelunavaus {
         this.aloittaja = aloittaja;
     }
 
-    public Keskustelunavaus(Keskustelualue alue, String otsikko, String avaus, String aloittaja) {
+    public Avaus(Alue alue, String otsikko, String avaus, String aloittaja) {
         this(null, alue, otsikko, avaus, null, aloittaja);
     }
     
@@ -33,7 +33,7 @@ public class Keskustelunavaus {
         return id;
     }
 
-    public Keskustelualue getAlue() {
+    public Alue getAlue() {
         return alue;
     }
 
@@ -59,7 +59,7 @@ public class Keskustelunavaus {
         this.id = id;
     }
 
-    public void setAlue(Keskustelualue alue) {
+    public void setAlue(Alue alue) {
         this.alue = alue;
     }
 
