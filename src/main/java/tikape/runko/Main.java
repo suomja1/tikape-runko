@@ -85,6 +85,7 @@ public class Main {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
             int sivu = Integer.parseInt(req.params(":sivu"));
+            
             int maara = 10; // kerrallaan näytettävien vastausten määrä
             int max = vastausdao.noOfRows(idd) / maara + 1;
             
@@ -102,11 +103,9 @@ public class Main {
             
             int alku = (sivu - 1) * maara - 1;
             
-            List<Vastaus> viestit = vastausdao.findAll(idd, alku, maara);
-
             map.put("alue", alueDao.findOne(id));
             map.put("avaus", avausDao.findOne(idd));
-            map.put("viestit", viestit);
+            map.put("viestit", vastausdao.findAll(idd, alku, maara));
             map.put("sivu", sivu);
             map.put("max", max);
             map.put("alku", alku + 2);
@@ -123,7 +122,7 @@ public class Main {
                     req.queryParams("kirjoittaja")
             ));
 
-            res.redirect("/" + id + "/" + idd + "/sivu/" + Integer.MAX_VALUE);
+            res.redirect("/" + id + "/" + idd + "/sivu/" + Integer.MAX_VALUE); //ylilyönti?
             return "";
         });
     }
