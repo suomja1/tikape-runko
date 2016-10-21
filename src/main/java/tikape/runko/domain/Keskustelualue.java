@@ -6,7 +6,7 @@ public class Keskustelualue {
     private String kuvaus;
     private String perustettu;
     private String perustaja;
-//    private List<Keskustelunavaus> avaukset // pitäisikö tässä olla lista alueen avauksista?
+//    private List<Keskustelunavaus> avaukset; // pitäisikö tässä olla lista alueen avauksista?
 
     // Konstruktorit:
     
