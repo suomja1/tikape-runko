@@ -119,8 +119,6 @@ public class Main {
         post("/:id/:idd/sivu/:sivu", (req, res) -> {
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
-            int sivu = Integer.parseInt(req.params(":sivu"));
-            int maara = 10; // kerrallaan näytettävien vastausten määrä
             vastausdao.create(new Vastaus(
                     keskustelunavausdao.findOne(idd),
                     req.queryParams("teksti"),
