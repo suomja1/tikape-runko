@@ -84,7 +84,7 @@ public class Main {
             HashMap map = new HashMap<>();
             Integer id = Integer.parseInt(req.params(":id"));
             Integer idd = Integer.parseInt(req.params(":idd"));
-            int sivu = Integer.parseInt(req.params(":sivu"));
+            Integer sivu = Integer.parseInt(req.params(":sivu"));
             
             int maara = 10; // kerrallaan näytettävien vastausten määrä
             int max = vastausdao.noOfRows(idd) / maara + 1;
